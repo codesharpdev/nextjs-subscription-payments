@@ -4,8 +4,9 @@ import { useRouter } from 'next/router';
 
 import Navbar from '@/components/ui/Navbar';
 import Footer from '@/components/ui/Footer';
-
+import { useUser } from '@/utils/useUser';
 import { PageMeta } from '../types';
+
 
 interface Props extends PropsWithChildren {
   meta?: PageMeta;
@@ -13,9 +14,11 @@ interface Props extends PropsWithChildren {
 
 export default function Layout({ children, meta: pageMeta }: Props) {
   const router = useRouter();
+  const { user } = useUser();
   const meta = {
-    title: 'Next.js Subscription Starter',
-    description: 'Brought to you by Vercel, Stripe, and Supabase.',
+    title: 'GetGPT – AI-Powered Virtual Assistant Chatbot for Every Website',
+    description:
+      'Instantly answer your visitors&#x27; questions with a personalized chatbot trained on your website content..',
     cardImage: '/og.png',
     ...pageMeta
   };
@@ -42,9 +45,25 @@ export default function Layout({ children, meta: pageMeta }: Props) {
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
-      <Navbar />
+
+      {user ? (
+        <div className="border-b">
+          <div className="flex h-16 items-center px-4">
+          <TeamSwitcher />
+            <MainNav className="mx-6" />
+            <div className="ml-auto flex items-center space-x-4">
+              <Search />
+              <UserNav />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <Navbar />
+      )}
       <main id="skip">{children}</main>
-      <Footer />
+      {user ? <></> : <Footer />}
+
+
     </>
   );
 }
